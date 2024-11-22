@@ -130,4 +130,9 @@ create table order_detail(
  );
 
  -- 같은 상품을 2번 구매한 구매자의 이름과 상품명을 출력
- select name from user u inner join order_cart oc where u.id = oc.customer_id;
+ -- 1. 같은 상품을 2번 구매한 사람의 customer id 와 product id
+ select customer_id,product_id from order_detail group by product_id, customer_id having count(*)>=2;
+ -- 답안
+ select u.name, p.product from user u inner join product p 
+ where u.id = (select customer_id from order_detail group by product_id, customer_id having count(*)>=2)
+ and p.id = (select product_id from order_detail group by product_id, customer_id having count(*)>=2);
